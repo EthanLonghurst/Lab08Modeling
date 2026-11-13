@@ -27,6 +27,17 @@ glimpse(college_grad_df)
 
 ```{r}
 #your code here
+ggplot(college_grad_df, aes(x=median))+
+  geom_histogram(binwidth=2500)+
+  scale_x_continuous(labels=dollar)
+  
+college_grad_df %>%
+  group_by(major_category)%>%
+  summarise(
+    count=n(),
+    avg_median=mean(median))%>%
+      arrange(desc(avg_median))
+  
 ```
 
 *Your explanation*
@@ -36,6 +47,18 @@ glimpse(college_grad_df)
 
 ```{r}
 #your code here
+college_grad_df %>%
+  filter(!is.na(sharewomen), !is.na(median)) %>%
+  ggplot(aes(x = sharewomen, y = median)) +
+  geom_point(alpha = 1) +
+  geom_smooth(method = "lm", se=FALSE, color = "red") +
+  labs(
+    title = "Median Earnings vs. Share of Women by Major",
+    x = "Share of Women",
+    y = "Median Earnings ($)"
+  )%>%
+scale_y_continuous(labels=dollar)
+
 ```
 
 *Your explanation*
@@ -44,6 +67,9 @@ glimpse(college_grad_df)
 
 ```{r}
 #your code here
+share_fit <- linear_reg() %>%
+  fit(median ~ sharewomen, data = college_grad_df)
+tidy(share_fit)
 ```
 
 *Your explanation*
